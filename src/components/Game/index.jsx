@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-// import styles from "./game.module.css";
 import './game.css'
 import { FaAppleAlt } from "react-icons/fa";
-import { GiSnakeBite } from 'react-icons/gi';
+import { GiSnakeBite, GiPoisonBottle } from 'react-icons/gi';
 
 const GRID_SIZE = 20;
 const INITIAL_SNAKE = [
@@ -20,13 +19,30 @@ const generateFood = () => {
     } while (INITIAL_SNAKE.some((segment) => segment.x === newFood.x && segment.y === newFood.y))
     return newFood;
 }
+
+const generateVenom = (snake, food) => {
+    let newVenom
+    do {
+        newVenom = {
+            x: Math.floor(Math.random() * ((GRID_SIZE - 2) + 1)),
+            y: Math.floor(Math.random() * ((GRID_SIZE - 2) + 1))
+        };
+    } while (
+        snake.some((segment) => segment.x === newVenom.x && segment.y === newVenom.y) ||
+        (food.x === newVenom.x && food.y === newVenom.y)
+    );
+    return newVenom;
+}
+
 const INITIAL_DIRECTION = { x: 0, y: -1 }
 
 export function Game() {
     const [snake, setSnake] = useState(INITIAL_SNAKE);
     const [food, setFood] = useState(generateFood());
+    const [venom, setVenom] = useState(null);
     const [direction, setDirection] = useState(INITIAL_DIRECTION);
     const [score, setScore] = useState(0);
+    const [foodCount, setFoodCount] = useState(0);
     const [isGameOver, setIsGameOver] = useState(false);
 
     useEffect(() => {
@@ -82,11 +98,21 @@ export function Game() {
         if (head.x === food.x && head.y === food.y) {
             setScore(score + 1)
             setFood(generateFood())
+            setFoodCount(foodCount + 1)
+
+            if ((foodCount + 1) % 6 === 0) {
+                setVenom(generateVenom(newSnake, food))
+            }
         } else {
-            newSnake.pop()
+            newSnake.pop();
         }
-        setSnake(newSnake)
-    }
+
+        if (venom && head.x === venom.x && head.y === venom.y) {
+            return setIsGameOver(true)
+        }
+
+        setSnake(newSnake);
+    };
 
     const checkCollision = (head) => {
         if (head.x < 0 || head.y < 0 || head.x > GRID_SIZE - 1 || head.y > GRID_SIZE -1) {
@@ -113,6 +139,7 @@ export function Game() {
                             let cellClass = "";
                             let isFood = false;
                             let isHead = false;
+                            let isVenomCell = false;
 
                             if(snake[0].x === col && snake[0].y === row){
                                 isHead = true;
@@ -126,11 +153,17 @@ export function Game() {
                                 cellClass = "food";
                                 isFood = true
                             }
+
+                            if (venom && venom.x === col && venom.y === row) {
+                                cellClass = "venom";
+                                isVenomCell = true;
+                            }
                             
                             return (
                                 <div key={col} className={`cell ${isHead ? 'head' : cellClass}`}>
                                     {isFood ? <FaAppleAlt color='#ff0000' size={26}/> : null}
                                     {isHead ? <GiSnakeBite color='#008631' size={30}/> : null}
+                                    {isVenomCell ? <GiPoisonBottle color='#8B008B' size={30} /> : null}
                                 </div>
                             )
                         })}
