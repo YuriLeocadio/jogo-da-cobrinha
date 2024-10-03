@@ -1,0 +1,28 @@
+.game{
+    display: inline-block;
+    border: 1px solid #1c99ff;
+    
+}
+
+.row{
+    display: flex;
+}
+
+.cell{
+    width: 30px;
+    height: 30px;
+    /* border: 1px solid rgb(0, 195, 255); */
+}
+
+.snake{
+    background-color: green;
+    border-radius: 100%;
+}
+
+.food{
+    background-color: transparent;
+}
+
+.head{
+    background-color: transparent;
+}
