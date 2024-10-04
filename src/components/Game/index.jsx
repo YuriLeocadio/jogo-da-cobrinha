@@ -218,9 +218,9 @@ export function Game() {
                     </div>
                 ))}
             </div>
-            {isGameOver && (
+            {isGameOver ? (
                 <button onClick={restartGame} className='btn'>Reiniciar Jogo</button>
-            )}
+            ) : null}
         </>
     )
 }
