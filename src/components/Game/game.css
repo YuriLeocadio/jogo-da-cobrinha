@@ -1,7 +1,6 @@
 .game{
     display: inline-block;
     border: 1px solid #1c99ff;
-    
 }
 
 .row{
@@ -25,4 +24,19 @@
 
 .head{
     background-color: transparent;
+}
+
+.btn{
+    color: black;
+    font-weight: bold;
+    padding: 12px 24px;
+    margin-top: 12px;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    background: linear-gradient(45deg, #01aaff, #c300ff);
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #0083c5, #8a00b4);
 }
